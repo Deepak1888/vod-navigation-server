@@ -1,0 +1,159 @@
+{
+  "settings": {
+    "number_of_shards": 2,
+    "number_of_replicas": 1,
+    "analysis": {
+      "analyzer": {
+        "custom_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "asciifolding",
+            "english_stop"
+          ],
+          "char_filter": [
+            "html_strip"
+          ]
+        },
+		"autocomplete_analyzer": {
+			"type": "custom",
+			"tokenizer": "standard",
+			"filter": [
+				"lowercase",
+				"asciifolding",
+				"english_stop",	
+				"autocomplete_filter"
+			],
+			"char_filter": [
+				"html_strip"
+			]
+		},
+        "lowercase_keyword_analyzer": {
+          "type": "custom",
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase"
+          ],
+          "char_filter": [
+            "html_strip"
+          ]
+        }
+      },
+      "filter": {
+        "english_stop": {
+          "type": "stop",
+          "stopwords": "_english_"
+        },
+		"autocomplete_filter": {
+			"type": "edge_ngram",
+			"min_gram": 1,
+			"max_gram": 20
+		}		
+      }
+    }
+  },
+  "mappings": {
+    "_default_": {
+      "properties": {
+        "id": {
+          "type": "text"
+        },
+		"type": {
+          "type": "text"
+        },
+		"title": {
+		  "type": "text",
+		  "analyzer": "autocomplete_analyzer",
+		  "search_analyzer": "custom_analyzer",
+		  "fields": {
+		  	"raw": {
+		  		"type": "text",
+		  		"analyzer": "custom_analyzer"
+		  	},
+		  	"exact": {
+		  		"type": "text",
+		  		"analyzer": "lowercase_keyword_analyzer"
+		  	},
+		  	"keyword": {
+		  		"type": "keyword"
+		  	}
+		  }
+		},
+		"description": {
+		  "type": "text",
+		  "analyzer": "autocomplete_analyzer",
+		  "search_analyzer": "custom_analyzer",
+		  "fields": {
+		  	"raw": {
+		  		"type": "text",
+		  		"analyzer": "custom_analyzer"
+		  	},
+		  	"exact": {
+		  		"type": "text",
+		  		"analyzer": "lowercase_keyword_analyzer"
+		  	},
+		  	"keyword": {
+		  		"type": "keyword"
+		  	}
+		  }
+		},				
+        "isActive": {
+          "type": "boolean"
+        },
+		"videoUrl": {
+		  "type": "text",
+    	  "index": false
+		},
+		"thumbnailUrl": {
+		  "type": "text",
+    	  "index": false
+		},
+		"tags": {
+		  "type": "text",
+		  "analyzer": "autocomplete_analyzer",
+		  "search_analyzer": "custom_analyzer",
+		  "fields": {
+		  	"raw": {
+		  		"type": "text",
+		  		"analyzer": "custom_analyzer"
+		  	},
+		  	"exact": {
+		  		"type": "text",
+		  		"analyzer": "lowercase_keyword_analyzer"
+		  	},
+		  	"keyword": {
+		  		"type": "keyword"
+		  	}
+		  }
+		},			
+        "categoryList": {
+          "type": "text",
+		  "analyzer": "autocomplete_analyzer",
+		  "search_analyzer": "custom_analyzer",
+		  "fields": {
+		  	"raw": {
+		  		"type": "text",
+		  		"analyzer": "custom_analyzer"
+		  	},
+		  	"exact": {
+		  		"type": "text",
+		  		"analyzer": "lowercase_keyword_analyzer"
+		  	},
+		  	"keyword": {
+		  		"type": "keyword"
+		  	}
+		  }
+        },
+		"createdDate": {
+		  "type": "date",
+		  "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+		},
+		"lastUpdatedDate": {
+		  "type": "date",
+		  "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+		}
+      }
+    }
+  }
+}
